@@ -259,7 +259,7 @@ void *send_msg(void *arg) {
 void *recv_msg(void *arg) {
     int sock = *((int*)arg);
     Packet pkt;
-   // char fmt_msg[BUF_SIZE + 512];
+    char fmt_msg[BUF_SIZE + 512];
     int str_len;
 
     while (is_running && (str_len = recvn(sock, &pkt, sizeof(Packet))) > 0) {
