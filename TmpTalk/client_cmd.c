@@ -114,7 +114,6 @@ int process_command(char *msg, int sock, Packet *pkt) {
         printf("║ 👥 /who            - 참여자 확인          ║\n" ANSI_COLOR_RESET);
         printf("║ 🎮 /game           - 미니게임             ║\n" ANSI_COLOR_RESET);
         printf("║ 💣 /bomb [초] [내용] - 폭탄 메시지        ║\n" ANSI_COLOR_RESET);
-        printf("║ 🚨 /alert [내용]   - 시스템 알림          ║\n" ANSI_COLOR_RESET);
         printf("║ ⏰ /expire [일]    - 프로젝트 만료        ║\n" ANSI_COLOR_RESET);
         printf("║ ❓ /help           - 도움말               ║\n" ANSI_COLOR_RESET);
         printf("║ 🚪 /exit           - 종료                 ║\n" ANSI_COLOR_RESET);
