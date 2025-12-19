@@ -259,11 +259,13 @@ void *send_msg(void *arg) {
 void *recv_msg(void *arg) {
     int sock = *((int*)arg);
     Packet pkt;
-    char fmt_msg[BUF_SIZE + 512];
+   // char fmt_msg[BUF_SIZE + 512];
     int str_len;
 
     while (is_running && (str_len = recvn(sock, &pkt, sizeof(Packet))) > 0) {
-        if (str_len != sizeof(Packet)) break; 종료
+        if (str_len != sizeof(Packet)){
+            break; 
+        } 
 
         if (pkt.type == MSG_FILE_UPLOAD_START) {
             snprintf(fmt_msg, sizeof(fmt_msg), ANSI_COLOR_BLUE "[파일]" ANSI_COLOR_RESET " %s: %s", pkt.role, pkt.data);

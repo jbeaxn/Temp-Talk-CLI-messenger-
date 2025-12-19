@@ -83,17 +83,6 @@ int process_command(char *msg, int sock, Packet *pkt) {
         return 0; 
     }
 
-    // /alert
-    else if (is_command(msg, "/alert")) {
-        char alert_msg[BUF_SIZE];
-        sscanf(msg + 7, "%[^\n]", alert_msg);
-        memset(pkt, 0, sizeof(Packet));
-        pkt->type = MSG_ALERT;
-        strncpy(pkt->data, alert_msg, BUF_SIZE - 1);
-        strcpy(pkt->project_id, my_project_id);
-        strcpy(pkt->role, my_role);
-        return 0; 
-    }
 
     // /expire
     else if (is_command(msg, "/expire")) {
