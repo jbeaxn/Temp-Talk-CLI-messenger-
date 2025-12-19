@@ -5,10 +5,11 @@
 void add_client(int sock, char *id, char *role);
 void remove_client(int sock);
 void send_msg_to_room(Packet *pkt, int sender_sock);
+void send_packet_to_all(Packet *pkt); // [추가] server_room.c에 있는 함수
+void set_project_expiration(char *project_id, int days); // [추가] server_room.c에 있는 함수
 void write_log(Packet *pkt);
 void get_user_list(char *project_id, char *output_buf);
 
-// [복구됨] 이 함수의 내용이 없어서 에러가 났었습니다. 다시 채워넣었습니다.
 void make_server_filename(char *project_id, char *origin_name, char *out_name) {
     sprintf(out_name, "server_file_%s_%s", project_id, origin_name);
 }
@@ -106,13 +107,22 @@ void *handle_client(void *arg) {
             }
             write_log(&pkt);
         }
-        else if (pkt.type == MSG_CHAT || pkt.type == MSG_EXPIRE_SET) {
+        // [해결 3] 만료 명령어 로직 분리
+        else if (pkt.type == MSG_EXPIRE_SET) {
+            // 1. 서버 메모리에 만료 시간 저장 (재접속 시 동기화용)
+            set_project_expiration(pkt.project_id, pkt.timer_sec);
+
+            // 2. 나를 포함한 '모든' 팀원에게 전송 (send_msg_to_room 아님)
+            send_packet_to_all(&pkt);
+            
+            write_log(&pkt);
+        }
+        else if (pkt.type == MSG_CHAT) {
             int is_answer = 0;
-            if (pkt.type == MSG_CHAT && !pkt.is_volatile) {
+            if (!pkt.is_volatile) {
                 is_answer = check_game_answer(pkt.data, pkt.role, pkt.project_id);
             }
 
-            // 정답이 아니면 평소처럼 채팅 전송
             if (!is_answer) {
                 send_msg_to_room(&pkt, clnt_sock);
                 write_log(&pkt);
