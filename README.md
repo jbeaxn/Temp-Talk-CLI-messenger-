@@ -6,7 +6,9 @@
 >
 > 프로젝트 종료 시 흔적 없이 사라지는 임시조직용 메신저 💌"
 >
-> 데모 영상 -> https://youtu.be/fel9qtXzSGY?si=7Lz0DZqh9CE-qY4P
+> **데모 영상 ->** https://youtu.be/fel9qtXzSGY?si=7Lz0DZqh9CE-qY4P
+> <img width="664" height="307" alt="image" src="https://github.com/user-attachments/assets/fe29c8ac-b3fb-4bea-83d3-8bdb550279ca" />
+
 
 ---
 
