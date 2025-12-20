@@ -1,4 +1,4 @@
-# 🎀 Temp-Talk 🍀 CLI 메신저
+# 🎀 Temp-Talk 🍀 임시조직을 위한 CLI 메신저
 
 > 💖 **[ELEC462] System Programming Final Project - Team 22 (Lab22)**
 > 
@@ -14,10 +14,10 @@
 * **프로젝트명:** Temp-Talk 🎀  
 * **팀명:** Lab22 (Team 22) 🍀
 * **개발 배경:**
-  - 💬 기존 메신저 사용 시 공적인 공간에 사생활 노출
+  - 💬 기존 메신저 사용 시 공적인 상황에서 사생활 노출
   - 🗂 프로젝트 종료 후에도 데이터가 남아 민감 정보 유출 위험
 * **해결 방법:**
-  - 익명성 보장 (Project ID + Role)
+  - 프로필 없이 접속 (Project ID + Role)
   - 프로젝트 종료 시 데이터 완전 삭제 💣
 
 ---
