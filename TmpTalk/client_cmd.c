@@ -105,19 +105,19 @@ int process_command(char *msg, int sock, Packet *pkt) {
     // /help
     else if (is_command(msg, "/help")) {
         printf("\n" ANSI_COLOR_CYAN);
-        printf("╔═══════════════════════════════════════════╗\n" ANSI_COLOR_RESET);
-        printf("║       ✨ Temp-Talk 명령어 도움말          ║\n" ANSI_COLOR_RESET);
-        printf("╠═══════════════════════════════════════════╣\n" ANSI_COLOR_RESET);
-        printf("║ 📎 /upload [파일]  - 파일 업로드          ║\n" ANSI_COLOR_RESET);
-        printf("║ 📋 /list           - 파일 목록            ║\n" ANSI_COLOR_RESET);
-        printf("║ 📂 /open [파일]    - 파일 열기            ║\n" ANSI_COLOR_RESET);
-        printf("║ 👥 /who            - 참여자 확인          ║\n" ANSI_COLOR_RESET);
-        printf("║ 🎮 /game           - 미니게임             ║\n" ANSI_COLOR_RESET);
-        printf("║ 💣 /bomb [초] [내용] - 폭탄 메시지        ║\n" ANSI_COLOR_RESET);
-        printf("║ ⏰ /expire [일]    - 프로젝트 만료        ║\n" ANSI_COLOR_RESET);
-        printf("║ ❓ /help           - 도움말               ║\n" ANSI_COLOR_RESET);
-        printf("║ 🚪 /exit           - 종료                 ║\n" ANSI_COLOR_RESET);
-        printf("╚═══════════════════════════════════════════╝\n" ANSI_COLOR_RESET);
+        printf("✨━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✨\n" ANSI_COLOR_RESET);
+        printf("           Temp-Talk 명령어 도움말          \n" ANSI_COLOR_RESET);
+        printf("✨━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✨\n" ANSI_COLOR_RESET);
+        printf("    📎 /upload [파일]  - 파일 업로드          \n" ANSI_COLOR_RESET);
+        printf("    📋 /list           - 파일 목록            \n" ANSI_COLOR_RESET);
+        printf("    📂 /open [파일]    - 파일 열기            \n" ANSI_COLOR_RESET);
+        printf("    👥 /who            - 참여자 확인          \n" ANSI_COLOR_RESET);
+        printf("    🎮 /game           - 미니게임             \n" ANSI_COLOR_RESET);
+        printf("    💣 /bomb [초] [내용] - 폭탄 메시지        \n" ANSI_COLOR_RESET);
+        printf("    ⏰ /expire [일]    - 프로젝트 만료        \n" ANSI_COLOR_RESET);
+        printf("    ❓ /help           - 도움말               \n" ANSI_COLOR_RESET);
+        printf("    🚪 /exit           - 종료                 \n" ANSI_COLOR_RESET);
+        printf("✨━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✨\n" ANSI_COLOR_RESET);
         printf("\n💡 엔터를 누르면 채팅으로 돌아갑니다...\n");
         getchar();
         return 1;

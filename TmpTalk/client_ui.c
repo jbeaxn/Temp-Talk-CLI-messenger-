@@ -113,23 +113,29 @@ void redraw_chat() {
     format_time_remaining(project_expire_time, time_str, sizeof(time_str));
     get_current_time(current_time, sizeof(current_time));
 
-    len += sprintf(buf + len, ANSI_COLOR_CYAN "╔═══════════════════════════════════════════════════════════════════╗\n");
-    len += sprintf(buf + len, "║" ANSI_COLOR_RESET " ✨ " ANSI_COLOR_BOLD "Temp-Talk" ANSI_COLOR_RESET ANSI_COLOR_CYAN " - 임시조직 전용 메신저                           ║\n");
-    len += sprintf(buf + len, "╠═══════════════════════════════════════════════════════════════════╣\n" ANSI_COLOR_RESET);
-    
-    char proj_line[256];
-    snprintf(proj_line, sizeof(proj_line), "  📁 프로젝트: " ANSI_COLOR_YELLOW "%s" ANSI_COLOR_RESET, my_project_id);
-    len += sprintf(buf + len, ANSI_COLOR_CYAN "║" ANSI_COLOR_RESET "%-80s" ANSI_COLOR_CYAN "║\n", proj_line); 
-
-    char role_line[256];
-    snprintf(role_line, sizeof(role_line), "  👤 역할: " ANSI_COLOR_GREEN "%s" ANSI_COLOR_RESET, my_role);
-    len += sprintf(buf + len, "║" ANSI_COLOR_RESET "%-85s" ANSI_COLOR_CYAN "║\n", role_line);
-    len += sprintf(buf + len, "╠═══════════════════════════════════════════════════════════════════╣\n" ANSI_COLOR_RESET);
-    len += sprintf(buf + len, ANSI_COLOR_CYAN "║" ANSI_COLOR_RESET "  📊 데이터: %-8s │ ⏰ 만료: %s │ 👥 " ANSI_COLOR_GREEN "%d명" ANSI_COLOR_RESET " │ 🕐 %s       " ANSI_COLOR_CYAN "║\n",
-           data_str, time_str, active_users, current_time);
-    len += sprintf(buf + len, "╚═══════════════════════════════════════════════════════════════════╝" ANSI_COLOR_RESET "\n");
-
     len += sprintf(buf + len, "\n");
+    len += sprintf(buf + len, ANSI_COLOR_CYAN "  ───────────────────────────────────────────────────────────────────────────────────────────\n" ANSI_COLOR_RESET);
+    len += sprintf(buf + len, ANSI_COLOR_CYAN "  " ANSI_COLOR_RESET " " ANSI_COLOR_BOLD ANSI_COLOR_CYAN "💬 Temp-Talk" ANSI_COLOR_RESET "                                              " ANSI_COLOR_CYAN "\n" ANSI_COLOR_RESET);
+    len += sprintf(buf + len, ANSI_COLOR_CYAN "  ───────────────────────────────────────────────────────────────────────────────────────────\n" ANSI_COLOR_RESET);
+    len += sprintf(buf + len, ANSI_COLOR_CYAN "  " ANSI_COLOR_RESET "                                                             " ANSI_COLOR_CYAN "\n" ANSI_COLOR_RESET);
+    len += sprintf(buf + len, ANSI_COLOR_CYAN "  " ANSI_COLOR_RESET "  📁 프로젝트: " ANSI_COLOR_YELLOW "%s" ANSI_COLOR_RESET " " ANSI_COLOR_DIM "·" ANSI_COLOR_RESET " 👤 역할: " ANSI_COLOR_GREEN "%s" ANSI_COLOR_RESET, 
+                   my_project_id, my_role);
+    
+    int info_len = strlen(my_project_id) + strlen(my_role) + 10;
+    for (int i = info_len; i < 54; i++) len += sprintf(buf + len, " ");
+    len += sprintf(buf + len, ANSI_COLOR_CYAN "\n\n" ANSI_COLOR_RESET);
+    len += sprintf(buf + len, ANSI_COLOR_CYAN "  ───────────────────────────────────────────────────────────────────────────────────────────\n" ANSI_COLOR_RESET);
+    
+    len += sprintf(buf + len, ANSI_COLOR_CYAN "  " ANSI_COLOR_RESET "  📊 데이터 사용량: %s " ANSI_COLOR_DIM "·" ANSI_COLOR_RESET " ⏰ 만료까지: %s " ANSI_COLOR_DIM "·" ANSI_COLOR_RESET " 👥 접속자 수: " ANSI_COLOR_GREEN "%d명" ANSI_COLOR_RESET " " ANSI_COLOR_DIM "·" ANSI_COLOR_RESET " 🕐 현재 시각: %s",
+                   data_str, time_str, active_users, current_time);
+    
+    int status_len = strlen(data_str) + strlen(current_time) + 25;
+    for (int i = status_len; i < 54; i++) len += sprintf(buf + len, " ");
+    len += sprintf(buf + len, ANSI_COLOR_CYAN "\n" ANSI_COLOR_RESET);
+    
+    len += sprintf(buf + len, ANSI_COLOR_CYAN "  ───────────────────────────────────────────────────────────────────────────────────────────\n" ANSI_COLOR_RESET);
+    len += sprintf(buf + len, "\n");
+
     time_t now = time(NULL);
     int start_index = (history_count > VIEW_ROWS) ? history_count - VIEW_ROWS : 0;
 
@@ -143,16 +149,20 @@ void redraw_chat() {
         if (history[i].is_volatile) {
             int remaining = (int)(history[i].volatile_end_time - now);
             const char *color = (remaining > history[i].original_timer / 2) ? ANSI_COLOR_YELLOW : ANSI_COLOR_RED;
-            len += sprintf(buf + len, ANSI_COLOR_DIM "  [%02d:%02d]" ANSI_COLOR_RESET " %s💣 %s[%d초]%s %s\n",
+            len += sprintf(buf + len, ANSI_COLOR_DIM "  %02d:%02d" ANSI_COLOR_RESET " %s💣 %s[%d초]%s %s\n",
                    t->tm_hour, t->tm_min, color, ANSI_COLOR_BOLD, remaining, ANSI_COLOR_RESET, history[i].msg);
         } else {
-            len += sprintf(buf + len, ANSI_COLOR_DIM "  [%02d:%02d]" ANSI_COLOR_RESET " %s %s\n", 
+            len += sprintf(buf + len, ANSI_COLOR_DIM "  %02d:%02d" ANSI_COLOR_RESET " %s %s\n", 
                    t->tm_hour, t->tm_min, icon, history[i].msg);
         }
     }
-    len += sprintf(buf + len, "\n" ANSI_COLOR_CYAN "───────────────────────────────────────────────────────────────────\n");
-    len += sprintf(buf + len, ANSI_COLOR_DIM "  /upload  /list  /open  /bomb  /expire  /game  /who  /exit  /help\n" ANSI_COLOR_DIM);
-    len += sprintf(buf + len, ANSI_COLOR_BOLD "\n💬 메시지 > %s" ANSI_COLOR_RESET, current_input_buf);
+    
+    len += sprintf(buf + len, "\n");
+    len += sprintf(buf + len, ANSI_COLOR_DIM "  ────────────────────────────────────────────────────────────────\n" ANSI_COLOR_RESET);
+    len += sprintf(buf + len, ANSI_COLOR_DIM "  💡 /upload /list /open /bomb /expire /game /who /exit /help\n" ANSI_COLOR_RESET);
+    len += sprintf(buf + len, ANSI_COLOR_DIM "  ────────────────────────────────────────────────────────────────\n" ANSI_COLOR_RESET);
+    len += sprintf(buf + len, "\n");
+    len += sprintf(buf + len, ANSI_COLOR_BOLD "  💬 메시지  " ANSI_COLOR_CYAN "▸" ANSI_COLOR_RESET "  %s" ANSI_COLOR_RESET, current_input_buf);
     len += sprintf(buf + len, "\033[?25h"); 
     write(STDOUT_FILENO, buf, len);
     pthread_mutex_unlock(&ui_mutex);
@@ -238,8 +248,8 @@ void *send_msg(void *arg) {
                 get_current_time(now_str, sizeof(now_str));
                 char sys_msg[256];
                 snprintf(sys_msg, sizeof(sys_msg), 
-                         "[%s] 🔔 " ANSI_COLOR_YELLOW "[시스템] 프로젝트가 %d일 후 자동 소멸됩니다." ANSI_COLOR_RESET, 
-                         now_str, display_days);
+                         "" ANSI_COLOR_YELLOW "[시스템] 프로젝트가 %d일 후 자동 소멸됩니다." ANSI_COLOR_RESET, 
+                         display_days);
                 add_to_history(sys_msg, NULL, 0, 0);
             }
 
@@ -321,8 +331,8 @@ void *recv_msg(void *arg) {
             char now_str[16];
             get_current_time(now_str, sizeof(now_str));
             snprintf(fmt_msg, sizeof(fmt_msg), 
-                     "[%s] 🔔 " ANSI_COLOR_YELLOW "[시스템] 프로젝트가 %d일 후 자동 소멸됩니다." ANSI_COLOR_RESET, 
-                     now_str, display_days);
+                     "" ANSI_COLOR_YELLOW "[시스템] 프로젝트가 %d일 후 자동 소멸됩니다." ANSI_COLOR_RESET, 
+                     display_days);
             add_to_history(fmt_msg, NULL, 0, 0);
             redraw_chat();
         }
