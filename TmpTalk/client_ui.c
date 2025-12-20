@@ -47,6 +47,10 @@ void enable_raw_mode() {
     tcgetattr(STDIN_FILENO, &orig_termios);
     struct termios raw = orig_termios;
     raw.c_lflag &= ~(ECHO | ICANON); 
+
+    raw.c_cc[VMIN] = 1;  
+    raw.c_cc[VTIME] = 0; // 무한루프 해결 ~~~
+
     tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw);
 }
 void disable_raw_mode() {
@@ -106,7 +110,7 @@ void redraw_chat() {
     char buf[16384]; 
     int len = 0;
     
-    len += sprintf(buf + len, "\033[?25l\033[2J\033[H"); 
+    len += sprintf(buf + len, "\033[?25l\033[1;1H\033[J");
 
     char data_str[32], time_str[64], current_time[16];
     format_bytes(total_data_usage, data_str, sizeof(data_str));
@@ -203,7 +207,12 @@ void *send_msg(void *arg) {
     redraw_chat();
 
     while (is_running) { 
-        char c = getchar();
+        int c = getchar(); 
+        
+        if (c == EOF) {
+            is_running = 0;
+            break;
+        }
         if (c == 127 || c == 8) {
             if (current_input_len > 0) {
                 current_input_len--;
@@ -222,7 +231,12 @@ void *send_msg(void *arg) {
             
             int is_cmd = process_command(msg_buf, sock, &pkt);
 
-            if (is_cmd == 1) { redraw_chat(); continue; }
+            if (is_cmd == 1) { 
+                write(STDOUT_FILENO, "\033[?25l\033[1;1H\033[J", 7); 
+                
+                redraw_chat(); 
+                continue; 
+            }
 
             if (pkt.type == 0) {
                 pkt.type = MSG_CHAT;

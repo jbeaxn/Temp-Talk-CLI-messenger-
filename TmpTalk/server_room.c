@@ -221,7 +221,8 @@ void send_msg_to_room(Packet *pkt, int sender_sock) {
 
 void get_user_list(char *project_id, char *output_buf) {
     pthread_mutex_lock(&mutx);
-    sprintf(output_buf, "< Current Users in Project: %s >\n", project_id);
+    printf("✨━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✨\n");
+    sprintf(output_buf, " [현재 접속 중인 사용자 목록]\n");
     for (int i = 0; i < clnt_cnt; i++) {
         if (strcmp(clients[i]->project_id, project_id) == 0) {
             strcat(output_buf, "- ");
@@ -229,5 +230,6 @@ void get_user_list(char *project_id, char *output_buf) {
             strcat(output_buf, "\n");
         }
     }
+    printf("✨━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✨\n");
     pthread_mutex_unlock(&mutx);
 }

@@ -20,33 +20,45 @@ void *handle_client(void *arg) {
 
     while ((str_len = read(clnt_sock, &pkt, sizeof(Packet))) != 0) {
         if (pkt.type == MSG_LOGIN) {
-            printf("[Login] ID: %s, Role: %s\n", pkt.project_id, pkt.role);
+            printf(ANSI_COLOR_GREEN "\n  ✅ 로그인 - 프로젝트: %s | 사용자: %s\n\n" ANSI_COLOR_RESET, 
+                   pkt.project_id, pkt.role);
             add_client(clnt_sock, pkt.project_id, pkt.role);
         }
         else if (pkt.type == MSG_COMMAND) {
             if (strcmp(pkt.data, "/list") == 0) {
                 char file_list_buf[BUF_SIZE] = "";
-                sprintf(file_list_buf, "\n\n파일을 열려면 /open [파일명]을 입력하세요.\n현재 업로드된 파일 목록은 아래와 같습니다.\n\n< File in Project: %s >\n", pkt.project_id);
+                snprintf(file_list_buf, sizeof(file_list_buf), 
+                         "\n✨━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✨\n"
+                         "          📂 프로젝트 '%s' 파일 목록\n"
+                         "✨━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✨\n\n", 
+                         pkt.project_id);
 
                 DIR *dir;
                 struct dirent *ent;
                 char prefix[100];
-                sprintf(prefix, "server_file_%s_", pkt.project_id);
+                snprintf(prefix, sizeof(prefix), "server_file_%s_", pkt.project_id);
                 int found = 0;
+                int count = 0;
 
                 if ((dir = opendir(".")) != NULL) {
                     while ((ent = readdir(dir)) != NULL) {
                         if (strncmp(ent->d_name, prefix, strlen(prefix)) == 0) {
-                            strcat(file_list_buf, "- ");
-                            strcat(file_list_buf, ent->d_name + strlen(prefix));
-                            strcat(file_list_buf, "\n");
+                            char temp[256];
+                            snprintf(temp, sizeof(temp), "    %d. %s\n", 
+                                    ++count, ent->d_name + strlen(prefix));
+                            strcat(file_list_buf, temp);
                             found = 1;
                         }
                     }
                     closedir(dir);
                 }
                 
-                if (!found) strcat(file_list_buf, "(No files uploaded yet)\n");
+                if (!found) {
+                    strcat(file_list_buf, "         (업로드된 파일이 없습니다)\n\n");
+                }
+                
+                strcat(file_list_buf, "\n         💡 파일 열기: /open [파일명]\n");
+                strcat(file_list_buf, "✨━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✨\n");
 
                 Packet res_pkt;
                 memset(&res_pkt, 0, sizeof(Packet));
@@ -80,13 +92,19 @@ void *handle_client(void *arg) {
                 int n = fread(res_pkt.data, 1, BUF_SIZE - 1, fp);
                 res_pkt.data[n] = '\0';
                 fclose(fp);
+                
+                printf(ANSI_COLOR_CYAN "\n  📄 파일 열기 - '%s' (프로젝트: %s)\n\n" ANSI_COLOR_RESET,
+                       pkt.data, pkt.project_id);
             } else {
-                strcpy(res_pkt.data, "(File not found or cannot open)");
+                strcpy(res_pkt.data, "\n❌ 파일을 찾을 수 없거나 열 수 없습니다.\n");
+                
+                printf(ANSI_COLOR_RED "\n  ❌ 파일 열기 실패 - '%s' (프로젝트: %s)\n\n" ANSI_COLOR_RESET,
+                       pkt.data, pkt.project_id);
             }
             write(clnt_sock, &res_pkt, sizeof(Packet));
         }
         else if (pkt.type == MSG_FILE_UPLOAD_START) {
-            printf(ANSI_COLOR_BLUE "[FILE UPLOAD] Project: %s | User: %s | File: %s\n" ANSI_COLOR_RESET,
+            printf(ANSI_COLOR_BLUE "\n  📤 파일 업로드 시작 - 프로젝트: %s | 사용자: %s | 파일: %s\n\n" ANSI_COLOR_RESET,
                    pkt.project_id, pkt.role, pkt.data);
             strcpy(current_upload_filename, pkt.data);
             send_msg_to_room(&pkt, clnt_sock);
