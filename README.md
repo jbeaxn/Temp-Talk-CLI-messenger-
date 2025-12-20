@@ -38,7 +38,7 @@
 ## 기술 & 구현 
 
 ### 개발 환경
-* **Language:** C (812+ Lines of Code)
+* **Language:** C (900+ Lines of Code)
 * **Communication:** TCP/IP Socket
 * **Concurrency:** POSIX Threads (pthread), Mutex
 
