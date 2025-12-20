@@ -35,7 +35,9 @@ void start_typing_game(char *requester_role, char *project_id) {
 
     // 이미 게임 중인지 확인
     if (game_state.is_active) {
-        sprintf(pkt.data, "⚠️ 이미 게임이 진행 중입니다! (in Project: %s)", current_game_project);
+        snprintf(pkt.data, sizeof(pkt.data), 
+                 "\n⚠️  이미 게임이 진행 중입니다! (Project: %s)\n", 
+                 current_game_project);
         send_packet_to_all(&pkt); 
         pthread_mutex_unlock(&game_mutex);
         return;
@@ -50,9 +52,18 @@ void start_typing_game(char *requester_role, char *project_id) {
     game_state.start_time = time(NULL);
     strcpy(current_game_project, project_id); // 현재 게임 방 설정
 
-    sprintf(pkt.data, "=== 🎮 스피드 타자 게임 시작! ===\n"
-                      "=== 아래 문장을 가장 먼저 치는 사람이 승리합니다! ===\n\n"
-                      "=== 👉 \"%s\" ", game_state.current_answer);
+    snprintf(pkt.data, sizeof(pkt.data), 
+             "\n"
+             "✨━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✨\n"
+             "\n"
+             "        🎮  스피드 타자 게임 시작!  🎮\n"
+             "\n"
+             "    💨 아래 문장을 가장 빠르게 입력하세요!\n"
+             "\n"
+             "    📝  %s\n"
+             "\n"
+             "✨━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━✨\n",
+             game_state.current_answer);
     
     send_packet_to_all(&pkt);
     
@@ -79,7 +90,19 @@ int check_game_answer(char *msg, char *role, char *project_id) {
             strcpy(pkt.role, "[Game]");
             strcpy(pkt.project_id, project_id);
             
-            sprintf(pkt.data, "=== 🎉 정답! 우승자는 [%s]님 입니다! (기록: %.2f초) ===", role, elapsed);
+            snprintf(pkt.data, sizeof(pkt.data), 
+                     "\n"
+                     "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉\n"
+                     "\n"
+                     "              ✨ 정답입니다! ✨\n"
+                     "\n"
+                     "               🏆   우승자: %s\n"
+                     "               ⏱️   기록: %.2f초\n"
+                     "\n"
+                     "                          축하합니다! 🎊\n"
+                     "\n"
+                     "🎉━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━🎉\n",
+                     role, elapsed);
             send_packet_to_all(&pkt);
         }
     }
