@@ -4,15 +4,15 @@
 > 
 > "Project ID와 Role만으로 접속하고,
 >
-> 프로젝트 종료 시 흔적 없이 사라지는 임시조직용 메신저 💌"
+> 프로젝트 종료 시 사라지는 임시조직용 메신저 💌"
 >
-> **데모 영상 ->** https://youtu.be/fel9qtXzSGY?si=7Lz0DZqh9CE-qY4P
+> **데모 영상 ->** [https://youtu.be/fel9qtXzSGY?si=7Lz0DZqh9CE-qY4P](https://youtu.be/VXAN0Rs5ido?si=0lk7-uB_ACtFS39j)
 > <img width="664" height="307" alt="image" src="https://github.com/user-attachments/assets/fe29c8ac-b3fb-4bea-83d3-8bdb550279ca" />
 
 
 ---
 
-## 프로젝트 소개 (Overview)
+## 프로젝트 소개
 * **프로젝트명:** Temp-Talk 🎀  
 * **팀명:** Lab22 (Team 22) 🍀
 * **개발 배경:**
